@@ -1,4 +1,4 @@
-import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {ElementRef, Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 
 @Injectable({
@@ -11,5 +11,11 @@ export class PlatformDetectorService {
 
   isPlatformBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
+  }
+
+  autoFocus(input: ElementRef<HTMLInputElement>) {
+    if (this.isPlatformBrowser()) {
+      input.nativeElement.focus();
+    }
   }
 }
