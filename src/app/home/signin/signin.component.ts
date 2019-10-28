@@ -32,12 +32,10 @@ export class SigninComponent implements OnInit {
     const password = this.loginForm.get('password').value;
     this.authService.authenticate(userName, password)
       .subscribe(() => {
-          console.log('autenticado');
           this.router.navigate(['user', userName]);
         },
         err => {
           console.log(err);
-          // alert('invalid user name or password!');
           this.loginForm.reset();
           this.platformDetector.autoFocus(this.userNameInput);
         });

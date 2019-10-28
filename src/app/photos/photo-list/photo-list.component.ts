@@ -22,16 +22,23 @@ export class PhotoListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userName = this.route.snapshot.paramMap.get('userName');
-    this.photos = this.route.snapshot.data.photos;
+    this.route.params.subscribe(params => {
+      this.userName = params.userName;
+      this.photos = this.route.snapshot.data['photos'];
+    });
+
+    /*   this.userName = this.route.snapshot.paramMap.get('userName');
+       this.photos = this.route.snapshot.data.photos;*/
   }
 
   load() {
     this.photoService.listFromUserPaginated(this.userName, ++this.currentPage)
-      .subscribe( it => {
+      .subscribe(it => {
         this.filter = '';
         this.photos = this.photos.concat(it);
-        if (!it.length || it.length < 12) { this.hasMode = false; }
+        if (!it.length || it.length < 12) {
+          this.hasMode = false;
+        }
       });
   }
 }
