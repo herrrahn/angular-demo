@@ -6,8 +6,7 @@ import {PhotoModule} from './photo/photo.module';
 import {PhotoListModule} from './photo-list/photo-list.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {VMessageModule} from '../shared/components/vmessage/vmessage.module';
-import { PhotoDetailsComponent } from './photo-details/photo-details.component';
-import { PhotoCommentsComponent } from './photo-details/photo-comments/photo-comments.component';
+import {LoadingModule} from '../shared/components/loading/loading.module';
 
 @NgModule({
  // exports: [PhotoComponent],

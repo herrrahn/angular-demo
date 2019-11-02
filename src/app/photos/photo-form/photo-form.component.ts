@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PhotoService} from '../photo/photo.service';
 import {Router} from '@angular/router';
 import {AlertService} from '../../shared/components/alert/alert.service';
 import {UserService} from '../../core/user/user.service';
+import {HttpEvent, HttpEventType} from '@angular/common/http';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -16,12 +18,14 @@ export class PhotoFormComponent implements OnInit {
   photoForm: FormGroup;
   file: File;
   preview: string;
+  percentDone: number;
 
   constructor(private formBuilder: FormBuilder,
               private photoService: PhotoService,
               private router: Router,
               private alertService: AlertService,
-              private userService: UserService) { }
+              private userService: UserService) {
+  }
 
   ngOnInit() {
     this.photoForm = this.formBuilder.group({
@@ -35,10 +39,18 @@ export class PhotoFormComponent implements OnInit {
     const description = this.photoForm.get('description').value;
     const allowComments = this.photoForm.get('allowComments').value;
     this.photoService.upload(description, allowComments, this.file)
-      .subscribe( () => {
-        this.alertService.success('Upload completed!', true);
-        this.router.navigate(['/user', this.userService.getUserName()]);
-      }, error => console.log(error));
+      .pipe(finalize( () => this.router.navigate(['/user', this.userService.getUserName()])))
+      .subscribe((event: HttpEvent<any>) => {
+        if (event.type == HttpEventType.UploadProgress) {
+          this.percentDone = Math.round(100 * event.loaded / event.total);
+        } else
+          if (event.type == HttpEventType.Response) {
+          this.alertService.success('Upload completed!', true);
+        }
+      }, error => {
+        console.log(error);
+        this.alertService.danger('Upload failed!');
+      });
   }
 
   handleFile(file: File) {

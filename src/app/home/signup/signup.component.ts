@@ -6,6 +6,7 @@ import {NewUser} from './new-user';
 import {SignupService} from './signup.service';
 import {Router} from '@angular/router';
 import {PlatformDetectorService} from '../../core/platform-detector/platform-detector.service';
+import {usernamePassword} from './username.password.validator';
 
 @Component({
   selector: 'app-signup',
@@ -57,16 +58,20 @@ export class SignupComponent implements OnInit {
           Validators.maxLength(14)
         ]
       ]
+    }, {
+      validator: usernamePassword
     });
 
     this.platform.autoFocus(this.inputEmail);
   }
 
   signup() {
-    const user = this.signupForm.getRawValue() as NewUser;
-    this.signupService
-      .signup(user)
-      .subscribe(() => this.router.navigate(['']),
-        error => console.log(error));
+    if (this.signupForm.valid && !this.signupForm.pending) {
+      const user = this.signupForm.getRawValue() as NewUser;
+      this.signupService
+        .signup(user)
+        .subscribe(() => this.router.navigate(['']),
+          error => console.log(error));
+    }
   }
 }

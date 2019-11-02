@@ -4,6 +4,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Subject} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 import {PhotoService} from '../photo/photo.service';
+import {LoadingService} from '../../shared/components/loading/loading.service';
 
 @Component({
   selector: 'ap-photo-list',
@@ -18,7 +19,8 @@ export class PhotoListComponent implements OnInit {
   currentPage = 1;
   userName = '';
 
-  constructor(private route: ActivatedRoute, private photoService: PhotoService) {
+  constructor(private route: ActivatedRoute,
+              private photoService: PhotoService) {
   }
 
   ngOnInit(): void {
